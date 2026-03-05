@@ -94,7 +94,8 @@ end
         if f == acosh
             x += 1
         end
-        @test call_on_device(f, x) ≈ f(x)
+        broken = ispocl && T == Float16 && f in [sqrt]
+        @test call_on_device(f, x) ≈ f(x) broken = broken
     end
 end
 
@@ -109,7 +110,8 @@ end
         ]
         x = rand(T)
         y = rand(T)
-        @test call_on_device(f, x, y) ≈ f(x, y)
+        broken = ispocl && T == Float16 && f == atan
+        @test call_on_device(f, x, y) ≈ f(x, y) broken = broken
     end
 end
 
@@ -134,7 +136,8 @@ end
             OpenCL.rsqrt,
         ]
         x = rand(T)
-        @test call_on_device(f, x) isa Real # Just check it doesn't error
+        broken = ispocl && T == Float16 && !(f in [OpenCL.rint])
+        @test call_on_device(f, x) isa Real broken = broken  # Just check it doesn't error
     end
     broken = ispocl && T == Float16
     @test call_on_device(OpenCL.ilogb, T(8.0)) isa Int32 broken = broken
@@ -152,7 +155,8 @@ end
         ]
         x = rand(T)
         y = rand(T)
-        @test call_on_device(f, x, y) isa Real  # Just check it doesn't error
+        broken = ispocl && T == Float16 && !(f in [OpenCL.maxmag, OpenCL.minmag])
+        @test call_on_device(f, x, y) isa Real broken = broken  # Just check it doesn't error
     end
     broken = ispocl && T == Float16
     @test call_on_device(OpenCL.rootn, T(8.0), Int32(3)) ≈ T(2.0) broken = broken
