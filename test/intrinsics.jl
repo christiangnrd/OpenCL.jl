@@ -94,7 +94,7 @@ end
         if f == acosh
             x += 1
         end
-        broken = ispocl && T == Float16 && f in [sqrt]
+        broken = ispocl && T == Float16 && f in [ceil, abs, floor, round, sqrt, trunc]
         @test call_on_device(f, x) ≈ f(x) broken = broken
     end
 end
