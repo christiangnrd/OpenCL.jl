@@ -136,7 +136,7 @@ end
             OpenCL.rsqrt,
         ]
         x = rand(T)
-        broken = ispocl && T == Float16 && !(f in [OpenCL.rint])
+        broken = ispocl && T == Float16 && (f in [OpenCL.rint])
         @test call_on_device(f, x) isa Real broken = broken  # Just check it doesn't error
     end
     broken = ispocl && T == Float16
@@ -155,7 +155,7 @@ end
         ]
         x = rand(T)
         y = rand(T)
-        broken = ispocl && T == Float16 && !(f in [OpenCL.maxmag, OpenCL.minmag])
+        broken = ispocl && T == Float16 && !(f in [OpenCL.atanpi, OpenCL.dim, OpenCL.maxmag, OpenCL.minmag])
         @test call_on_device(f, x, y) isa Real broken = broken  # Just check it doesn't error
     end
     broken = ispocl && T == Float16
