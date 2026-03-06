@@ -94,7 +94,7 @@ end
         if f == acosh
             x += 1
         end
-        broken = ispocl && T == Float16 && f in [ceil, abs, floor, round, sqrt, trunc]
+        broken = ispocl && T == Float16 && f in [ceil, abs, floor, round, sqrt, trunc] && Sys.ARCH == :aarch64
         @test call_on_device(f, x) ≈ f(x) broken = broken
     end
 end
@@ -110,7 +110,7 @@ end
         ]
         x = rand(T)
         y = rand(T)
-        broken = ispocl && T == Float16 && f == atan
+        broken = ispocl && T == Float16 && f == atan && Sys.ARCH == :aarch64
         @test call_on_device(f, x, y) ≈ f(x, y) broken = broken
     end
 end
@@ -136,7 +136,7 @@ end
             OpenCL.rsqrt,
         ]
         x = rand(T)
-        broken = ispocl && T == Float16 && (f in [OpenCL.rint])
+        broken = ispocl && T == Float16 && (f in [OpenCL.logb])
         @test call_on_device(f, x) isa Real broken = broken  # Just check it doesn't error
     end
     broken = ispocl && T == Float16
